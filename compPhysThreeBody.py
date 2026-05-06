@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 import time
 
+# Masses of the planets/bodies relative to earth's mass (e.g. 1.0 means same mass as Earth)
 m1 = 1.0
 m2 = 1.0
 m3 = 1.0
