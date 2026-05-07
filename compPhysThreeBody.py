@@ -46,7 +46,10 @@ solution = solve_ivp(
     t_span = (time_s, time_e),
     y0 = init_conditions,
     t_eval = t_points,
-    args = (m1, m2, m3)
+    args = (m1, m2, m3),
+    rtol=1e-10,
+    atol=1e-12,
+    method='DOP853'
 )
 
 t2 = time.time()
@@ -121,4 +124,33 @@ def update(frame):
     return planet1_plt, planet1_dot, planet2_plt, planet2_dot, planet3_plt, planet3_dot
 
 animation = FuncAnimation(fig, update, frames=range(0, len(t_points), 1), interval=10, blit=True)
+plt.show()
+
+d12 = np.linalg.norm(solution.y[0:3] - solution.y[3:6], axis=0)
+d13 = np.linalg.norm(solution.y[0:3] - solution.y[6:9], axis=0)
+d23 = np.linalg.norm(solution.y[3:6] - solution.y[6:9], axis=0)
+
+# Extract velocities from solution
+v1 = solution.y[9:12]   # shape (3, N)
+v2 = solution.y[12:15]
+v3 = solution.y[15:18]
+
+# Kinetic energy
+KE = 0.5 * (m1 * np.sum(v1**2, axis=0) +
+             m2 * np.sum(v2**2, axis=0) +
+             m3 * np.sum(v3**2, axis=0))
+
+# Potential energy (G=1 implicitly)
+PE = (-m1*m2 / d12 - m1*m3 / d13 - m2*m3 / d23)
+
+E_total = KE + PE
+E0 = E_total[0]
+
+relative_energy_error = np.abs((E_total - E0) / E0)
+
+plt.semilogy(t_sol, relative_energy_error)
+plt.xlabel("Time")
+plt.ylabel("Relative Energy Error |ΔE/E₀|")
+plt.title("Energy Conservation Error Over Time")
+plt.grid()
 plt.show()
