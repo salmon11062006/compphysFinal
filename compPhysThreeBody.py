@@ -16,7 +16,7 @@ init_pos3 = np.array([0.0, 1.0, 1.0])
 #Initial velocity
 init_vel1 = np.array([0.0, 0.0, -1.0])
 init_vel2 = np.array([0.0, 0.0, 1.0])
-init_vel3 = np.array([0.0, 0.0, -0.6])
+init_vel3 = np.array([0.0, 0.0, -1.0])
 
 init_conditions = np.array([
     init_pos1, init_pos2, init_pos3, 
